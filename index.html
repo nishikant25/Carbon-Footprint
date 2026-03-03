@@ -3,16 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CarbonTrack Pro</title>
+<title>CarbonTrack 2.0</title>
 <link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="centered">
 
-<div class="glass-card">
-<h1>🌍 CarbonTrack Pro</h1>
-<p>Track. Reduce. Sustain.</p>
-<input type="text" id="username" placeholder="Enter your name">
-<button id="loginBtn">Start Tracking</button>
+<body>
+
+<div class="app">
+
+<!-- HERO -->
+<section class="step active" id="step1">
+  <h1>🌍 CarbonTrack</h1>
+  <p>Discover your environmental impact in minutes.</p>
+  <button id="startBtn">Start Calculation</button>
+</section>
+
+<!-- STEP 2 -->
+<section class="step" id="step2">
+  <h2>Home Energy</h2>
+  <input type="number" id="electricity" placeholder="Monthly electricity (kWh)">
+  <button class="next">Next</button>
+</section>
+
+<!-- STEP 3 -->
+<section class="step" id="step3">
+  <h2>Transportation</h2>
+  <input type="number" id="car" placeholder="Car travel per month (km)">
+  <input type="number" id="flights" placeholder="Flights per year">
+  <button class="next">Next</button>
+  <button class="back">Back</button>
+</section>
+
+<!-- STEP 4 -->
+<section class="step" id="step4">
+  <h2>Food Habits</h2>
+  <select id="diet">
+    <option value="veg">Vegetarian</option>
+    <option value="nonveg">Non-Vegetarian</option>
+  </select>
+  <button id="calculateBtn">See Results</button>
+  <button class="back">Back</button>
+</section>
+
+<!-- RESULTS -->
+<section class="step" id="results">
+  <h2>Your Annual Carbon Footprint</h2>
+  <h1 id="total">0 kg</h1>
+  <p id="trees"></p>
+  <canvas id="chart"></canvas>
+  <button id="restart">Calculate Again</button>
+</section>
+
 </div>
 
 <script src="js/app.js"></script>
