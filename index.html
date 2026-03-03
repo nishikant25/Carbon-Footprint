@@ -3,30 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CarbonTrack Pro | Login</title>
+<title>CarbonTrack Pro</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
+<body class="centered">
 
-<body class="login-body">
-
-<div class="login-card">
-    <h1>🌍 CarbonTrack Pro</h1>
-    <p>Measure. Reduce. Sustain.</p>
-    <input type="text" id="username" placeholder="Enter your name">
-    <button onclick="login()">Enter Dashboard</button>
+<div class="glass-card">
+<h1>🌍 CarbonTrack Pro</h1>
+<p>Track. Reduce. Sustain.</p>
+<input type="text" id="username" placeholder="Enter your name">
+<button id="loginBtn">Start Tracking</button>
 </div>
 
-<script>
-function login(){
-    const user = document.getElementById("username").value.trim();
-    if(user === ""){
-        alert("Please enter your name");
-        return;
-    }
-    localStorage.setItem("carbonUser", user);
-    window.location.href = "dashboard.html";
-}
-</script>
-
+<script src="js/app.js"></script>
 </body>
 </html>
