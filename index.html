@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarbonTrack Pro | Login</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="login-body">
+
+<div class="login-card">
+    <h1>🌍 CarbonTrack Pro</h1>
+    <p>Measure. Reduce. Sustain.</p>
+    <input type="text" id="username" placeholder="Enter your name">
+    <button onclick="login()">Enter Dashboard</button>
+</div>
+
+<script>
+function login(){
+    const user = document.getElementById("username").value.trim();
+    if(user === ""){
+        alert("Please enter your name");
+        return;
+    }
+    localStorage.setItem("carbonUser", user);
+    window.location.href = "dashboard.html";
+}
+</script>
+
+</body>
+</html>
