@@ -1,98 +1,147 @@
+document.addEventListener("DOMContentLoaded", () => {
+
 const user = localStorage.getItem("carbonUser");
 
+// ===== LOGIN =====
+const loginBtn = document.getElementById("loginBtn");
+if(loginBtn){
+loginBtn.addEventListener("click", () => {
+const name = document.getElementById("username").value.trim();
+if(!name) return alert("Enter your name");
+localStorage.setItem("carbonUser", name);
+window.location.href="dashboard.html";
+});
+}
+
+// ===== DASHBOARD AUTH =====
+const userDisplay = document.getElementById("userDisplay");
+if(userDisplay){
 if(!user){
 window.location.href="index.html";
+return;
+}
+userDisplay.innerText = user;
 }
 
-document.getElementById("userName").innerText = user;
-
-function logout(){
+// ===== LOGOUT =====
+const logoutBtn = document.getElementById("logoutBtn");
+if(logoutBtn){
+logoutBtn.addEventListener("click",()=>{
 localStorage.removeItem("carbonUser");
 window.location.href="index.html";
+});
 }
 
-function calculate(){
+const calculateBtn = document.getElementById("calculateBtn");
+if(calculateBtn){
+calculateBtn.addEventListener("click", calculateFootprint);
+}
 
-let electricity = parseFloat(document.getElementById("electricity").value)||0;
-let car = parseFloat(document.getElementById("car").value)||0;
-let flights = parseFloat(document.getElementById("flights").value)||0;
-let diet = document.getElementById("diet").value;
+const pdfBtn = document.getElementById("pdfBtn");
+if(pdfBtn){
+pdfBtn.addEventListener("click", generatePDF);
+}
 
-let electricityCO2 = electricity*12*0.82;
-let carCO2 = car*12*0.21;
-let flightCO2 = flights*150;
-let dietCO2 = diet==="veg"?1000:2000;
+updateLeaderboard();
+});
 
-let total = electricityCO2+carCO2+flightCO2+dietCO2;
+let chartInstance;
 
-animateCounter(total);
+// ===== CALCULATION ENGINE =====
+function calculateFootprint(){
 
-document.getElementById("resultCard").classList.remove("hidden");
+const country = document.getElementById("country").value;
+const electricity = +document.getElementById("electricity").value || 0;
+const car = +document.getElementById("car").value || 0;
+const flights = +document.getElementById("flights").value || 0;
+const diet = document.getElementById("diet").value;
 
-let trees = Math.round(total/21);
+const emissionFactors = {
+india: 0.82,
+usa: 0.92,
+uk: 0.45
+};
+
+let electricityCO2 = electricity * 12 * emissionFactors[country];
+let carCO2 = car * 12 * 0.21;
+let flightCO2 = flights * 150;
+let dietCO2 = diet==="veg" ? 1000 : 2000;
+
+let total = electricityCO2 + carCO2 + flightCO2 + dietCO2;
+
+displayResults(total, electricityCO2, carCO2, flightCO2, dietCO2);
+saveScore(localStorage.getItem("carbonUser"), total);
+}
+
+// ===== DISPLAY =====
+function displayResults(total,e,c,f,d){
+
+document.getElementById("resultSection").classList.remove("hidden");
+document.getElementById("totalOutput").innerText = Math.round(total)+" kg CO₂";
+
+const avgIndia = 1900;
+document.getElementById("comparison").innerText =
+total > avgIndia ? "Above India’s average footprint." :
+"Below India’s average footprint. Great!";
+
 document.getElementById("trees").innerText =
-"Equivalent to planting "+trees+" trees 🌳";
+"🌳 Plant "+Math.round(total/21)+" trees to offset this.";
 
-let suggestion="";
-if(electricityCO2>2000) suggestion+="Reduce electricity usage. ";
-if(carCO2>1500) suggestion+="Use public transport. ";
-if(diet==="nonveg") suggestion+="Try plant-based meals. ";
-if(suggestion==="") suggestion="Great job! Keep it up.";
+if(chartInstance) chartInstance.destroy();
 
-document.getElementById("suggestions").innerText=suggestion;
-
-new Chart(document.getElementById("chart"),{
+chartInstance = new Chart(document.getElementById("chart"),{
 type:'doughnut',
 data:{
 labels:["Electricity","Car","Flights","Diet"],
-datasets:[{data:[electricityCO2,carCO2,flightCO2,dietCO2]}]
+datasets:[{
+data:[e,c,f,d],
+backgroundColor:["#4CAF50","#2196F3","#FFC107","#E91E63"]
+}]
 }
 });
 
-saveScore(user,total);
+document.getElementById("suggestions").innerText =
+generateSuggestions(total);
 }
 
-function animateCounter(value){
-let element=document.getElementById("totalCO2");
-let start=0;
-let duration=1000;
-let increment=value/50;
-let timer=setInterval(()=>{
-start+=increment;
-if(start>=value){
-start=value;
-clearInterval(timer);
-}
-element.innerText=Math.round(start)+" kg CO₂";
-},duration/50);
+// ===== SMART SUGGESTIONS =====
+function generateSuggestions(total){
+if(total>4000) return "High footprint. Reduce travel and energy use.";
+if(total>2000) return "Moderate footprint. Improve efficiency.";
+return "Low footprint. Keep it sustainable!";
 }
 
+// ===== LEADERBOARD =====
 function saveScore(user,score){
-let scores=JSON.parse(localStorage.getItem("scores"))||[];
-scores.push({user:user,score:score});
+let scores = JSON.parse(localStorage.getItem("scores"))||[];
+let existing = scores.find(s=>s.user===user);
+if(existing) existing.score = score;
+else scores.push({user,score});
 scores.sort((a,b)=>a.score-b.score);
 localStorage.setItem("scores",JSON.stringify(scores));
 updateLeaderboard();
 }
 
 function updateLeaderboard(){
-let scores=JSON.parse(localStorage.getItem("scores"))||[];
-let list=document.getElementById("leaderboard");
+let scores = JSON.parse(localStorage.getItem("scores"))||[];
+let list = document.getElementById("leaderboard");
+if(!list) return;
 list.innerHTML="";
-scores.slice(0,5).forEach(s=>{
+scores.slice(0,5).forEach((s,i)=>{
 let li=document.createElement("li");
-li.innerText=s.user+" - "+Math.round(s.score)+" kg";
+li.innerText=(i+1)+". "+s.user+" - "+Math.round(s.score)+" kg";
 list.appendChild(li);
 });
 }
-updateLeaderboard();
 
-async function downloadPDF(){
+// ===== PDF =====
+function generatePDF(){
 const { jsPDF } = window.jspdf;
 const doc = new jsPDF();
+doc.setFontSize(18);
 doc.text("CarbonTrack Pro Report",20,20);
-doc.text("User: "+user,20,30);
-doc.text(document.getElementById("totalCO2").innerText,20,40);
-doc.text(document.getElementById("trees").innerText,20,50);
+doc.setFontSize(12);
+doc.text("User: "+localStorage.getItem("carbonUser"),20,35);
+doc.text("Annual Emission: "+document.getElementById("totalOutput").innerText,20,45);
 doc.save("Carbon_Report.pdf");
 }
