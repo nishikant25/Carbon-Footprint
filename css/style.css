@@ -1,55 +1,53 @@
 body {
-margin: 0;
+margin:0;
 font-family: 'Segoe UI', sans-serif;
 background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color: white;
+color:white;
 }
 
-.login-body {
+.centered {
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
 }
 
-.login-card {
-background: rgba(255,255,255,0.1);
-padding:40px;
-border-radius:15px;
-text-align:center;
-backdrop-filter: blur(10px);
-}
-
-.container {
+.grid {
 display:grid;
-grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
-gap:20px;
-padding:20px;
+grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+gap:25px;
+padding:25px;
 }
 
-.card {
+.glass-card {
 background: rgba(255,255,255,0.1);
-padding:20px;
-border-radius:15px;
-backdrop-filter: blur(10px);
+padding:25px;
+border-radius:20px;
+backdrop-filter: blur(15px);
+transition:0.3s ease;
+}
+
+.glass-card:hover {
+transform: translateY(-5px);
 }
 
 input, select {
 width:100%;
-padding:10px;
+padding:12px;
 margin:10px 0;
 border:none;
-border-radius:8px;
+border-radius:10px;
 }
 
 button {
-padding:10px 15px;
-background:#00c853;
+padding:12px;
 border:none;
-border-radius:8px;
+border-radius:10px;
+background:#00c853;
 color:white;
-cursor:pointer;
 font-weight:bold;
+cursor:pointer;
+transition:0.3s;
 }
 
 button:hover {
@@ -59,9 +57,8 @@ background:#00e676;
 header {
 display:flex;
 justify-content:space-between;
-align-items:center;
 padding:15px 30px;
-background: rgba(0,0,0,0.3);
+background:rgba(0,0,0,0.4);
 }
 
 .hidden {
