@@ -1,71 +1,58 @@
 body {
-margin:0;
-font-family: 'Segoe UI', sans-serif;
-background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-color:white;
+  margin:0;
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
 }
 
-.centered {
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
+.app {
+  width:95%;
+  max-width:500px;
 }
 
-.grid {
-display:grid;
-grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
-gap:25px;
-padding:25px;
+.step {
+  display:none;
+  text-align:center;
+  animation:fade 0.4s ease;
 }
 
-.glass-card {
-background: rgba(255,255,255,0.1);
-padding:25px;
-border-radius:20px;
-backdrop-filter: blur(15px);
-transition:0.3s ease;
-}
-
-.glass-card:hover {
-transform: translateY(-5px);
+.step.active {
+  display:block;
 }
 
 input, select {
-width:100%;
-padding:12px;
-margin:10px 0;
-border:none;
-border-radius:10px;
+  width:100%;
+  padding:12px;
+  margin:12px 0;
+  border-radius:8px;
+  border:none;
 }
 
 button {
-padding:12px;
-border:none;
-border-radius:10px;
-background:#00c853;
-color:white;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
+  padding:12px 18px;
+  margin:8px;
+  border:none;
+  border-radius:8px;
+  background:#00c853;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
 }
 
 button:hover {
-background:#00e676;
+  background:#00e676;
 }
 
-header {
-display:flex;
-justify-content:space-between;
-padding:15px 30px;
-background:rgba(0,0,0,0.4);
+canvas {
+  margin-top:20px;
 }
 
-.hidden {
-display:none;
-}
-
-ul {
-list-style:none;
-padding:0;
+@keyframes fade {
+  from {opacity:0;}
+  to {opacity:1;}
 }
